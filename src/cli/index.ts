@@ -6,6 +6,7 @@ import { createLightsCommand } from './commands/lights.js';
 import { createConfigCommand } from './commands/config.js';
 import { createAutomationCommand } from './commands/automation.js';
 import { createAdaptiveCommand } from './commands/adaptive.js';
+import { createScenesCommand } from './commands/scenes.js';
 
 const program = new Command();
 
@@ -21,5 +22,6 @@ program.addCommand(createLightsCommand());
 program.addCommand(createConfigCommand());
 program.addCommand(createAutomationCommand());
 program.addCommand(createAdaptiveCommand());
+program.addCommand(createScenesCommand());
 
 program.parse();
