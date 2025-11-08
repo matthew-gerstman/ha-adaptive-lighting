@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { createInfoCommand } from './commands/info.js';
+import { createEntitiesCommand } from './commands/entities.js';
 
 const program = new Command();
 
@@ -10,8 +11,9 @@ program
   .description('HomeAssistant CLI utility for controlling your smart home')
   .version('1.0.0');
 
-// Add info command
+// Add commands
 program.addCommand(createInfoCommand());
+program.addCommand(createEntitiesCommand());
 
 // Placeholder commands
 program
@@ -19,13 +21,6 @@ program
   .description('Control and query lights')
   .action(() => {
     console.log(chalk.yellow('Lights command - coming soon'));
-  });
-
-program
-  .command('entities')
-  .description('Query and manage entities')
-  .action(() => {
-    console.log(chalk.yellow('Entities command - coming soon'));
   });
 
 program
