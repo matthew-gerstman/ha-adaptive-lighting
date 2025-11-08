@@ -1,6 +1,35 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Build output
 dist/
+*.tsbuildinfo
+
+# Environment
 .env
-*.log
+.env.local
+.env.*.local
+
+# Configuration
+ha-cli.config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
-types/home-assistant.ts
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
