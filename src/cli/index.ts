@@ -12,6 +12,7 @@ import { createScriptsCommand } from './commands/scripts.js';
 import { createQueryCommand } from './commands/query.js';
 import { createSwitchesCommand } from './commands/switches.js';
 import { createClimateCommand } from './commands/climate.js';
+import { createServicesCommand } from './commands/services.js';
 
 const program = new Command();
 
@@ -33,5 +34,6 @@ program.addCommand(createScenesCommand());
 program.addCommand(createWatchCommand());
 program.addCommand(createScriptsCommand());
 program.addCommand(createQueryCommand());
+program.addCommand(createServicesCommand());
 
 program.parse();
