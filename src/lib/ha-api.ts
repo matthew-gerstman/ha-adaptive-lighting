@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import type { HAConfig, HAEntity, HAArea, HAService, HAAutomation, ServiceCallData } from './types.js';
 import { validateEntityId, validateBrightness, validateKelvin, validateRGB, validateTransition } from './validators.js';
 import { entityCache } from './cache.js';
+import { datadogLogger } from './datadog-logger.js';
 
 export class HomeAssistantAPI {
   private client: AxiosInstance;
@@ -20,9 +21,26 @@ export class HomeAssistantAPI {
       timeout: 10000,
     });
 
+    // Request interceptor for logging
+    this.client.interceptors.request.use(
+      request => {
+        const method = request.method?.toUpperCase() || 'GET';
+        const url = request.url || '';
+        datadogLogger.logAPICall(method, url, request.data);
+        return request;
+      }
+    );
+
+    // Response interceptor for logging and errors
     this.client.interceptors.response.use(
-      response => response,
+      response => {
+        return response;
+      },
       (error: AxiosError) => {
+        const method = error.config?.method?.toUpperCase() || 'UNKNOWN';
+        const url = error.config?.url || 'unknown';
+        datadogLogger.logAPICall(method, url, error.config?.data, undefined, error.message);
+
         if (error.response) {
           const message = (error.response.data as any)?.message || error.message;
           throw new Error(`HA API Error (${error.response.status}): ${message}`);
@@ -50,16 +68,17 @@ export class HomeAssistantAPI {
   }
 
   async getStates(): Promise<HAEntity[]> {
-    // Check cache first
     if (this.useCache) {
       const cached = entityCache.get('all_states');
-      if (cached) return cached;
+      if (cached) {
+        datadogLogger.log('info', 'Using cached states', { cache_hit: true });
+        return cached;
+      }
     }
 
     const response = await this.client.get('/api/states');
     const data = response.data;
 
-    // Cache the result
     if (this.useCache) {
       entityCache.set('all_states', data);
     }
@@ -94,7 +113,6 @@ export class HomeAssistantAPI {
       throw new Error('Domain and service are required');
     }
 
-    // Clear cache after state-changing operations
     if (this.useCache) {
       entityCache.clear();
     }
