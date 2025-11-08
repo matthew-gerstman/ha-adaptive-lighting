@@ -10,6 +10,9 @@ A comprehensive TypeScript CLI utility for controlling and managing your HomeAss
 - 🎨 **Adaptive Lighting** - Built-in adaptive lighting simulation and control
 - ⚡ **Batch Operations** - Control multiple devices with dry-run support
 - 🔒 **Safe** - Dry-run mode, validation, and clear error messages
+- 👁️ **Real-time Monitoring** - Watch entities for state changes
+- 🎬 **Scene & Script Management** - Create and activate scenes, run scripts
+- 🔍 **Advanced Queries** - Complex filtering and statistics
 
 ## Installation
 
@@ -43,38 +46,25 @@ HASS_TOKEN=your_long_lived_access_token
 5. Give it a name (e.g., "CLI Access")
 6. Copy the token to your `.env` file
 
-### Optional Configuration File
-
-Create `ha-cli.config.json` for additional settings:
-
-```json
-{
-  "defaults": {
-    "transition": 1,
-    "outputFormat": "table"
-  },
-  "aliases": {
-    "bedroom": "light.bedroom_ceiling",
-    "living": "light.living_room_ceiling"
-  }
-}
-```
-
-## Usage
+## Quick Start
 
 ```bash
-# Run commands
-npm run ha -- <command> [options]
+# Verify connection
+npm run ha info
 
-# Or after building
-node dist/cli/index.js <command> [options]
+# List all lights
+npm run ha lights list
+
+# Turn on a light with adaptive settings
+npm run ha lights on light.bedroom_ceiling --brightness 128 --kelvin 4000
+
+# Watch for changes
+npm run ha watch lights --area bedroom
 ```
 
 ## Commands
 
 ### Info Commands
-
-Get information about your HomeAssistant instance:
 
 ```bash
 # Show connection status and instance info
@@ -89,8 +79,6 @@ npm run ha info domains
 
 ### Entity Commands
 
-Query and manage entities:
-
 ```bash
 # List all entities
 npm run ha entities list
@@ -101,22 +89,14 @@ npm run ha entities list --domain light
 # Search by name
 npm run ha entities list --search bedroom
 
-# Get detailed entity info
-npm run ha entities get light.bedroom_ceiling
-
-# Get entity with history
+# Get detailed entity info with history
 npm run ha entities get light.bedroom_ceiling --history 24
 
 # Call a service on an entity
 npm run ha entities call light.bedroom_ceiling turn_on --data '{"brightness": 255}'
-
-# JSON output for parsing
-npm run ha entities list --json
 ```
 
 ### Light Commands
-
-Control lights with advanced options:
 
 ```bash
 # List all lights
@@ -130,32 +110,73 @@ npm run ha lights list --area bedroom
 # Get light details
 npm run ha lights get light.bedroom_ceiling
 
-# Turn on a light
-npm run ha lights on light.bedroom_ceiling
-
 # Turn on with options
 npm run ha lights on light.bedroom_ceiling --brightness 128 --kelvin 4000 --transition 2
 
-# Turn off a light
+# Turn off with transition
 npm run ha lights off light.bedroom_ceiling --transition 1
 
-# Set light properties
+# Set properties
 npm run ha lights set light.bedroom_ceiling --brightness 200 --kelvin 3000
-
-# Set RGB color
 npm run ha lights set light.living_room_lamp --rgb 255,128,0
 
-# Batch operations (DRY RUN FIRST!)
+# Batch operations (ALWAYS dry-run first!)
 npm run ha lights batch on --area bedroom --dry-run
 npm run ha lights batch on --area bedroom --brightness 150 --kelvin 3500
-
-# Batch turn off with transition
 npm run ha lights batch off --area living_room --transition 2
 ```
 
-### Config Commands
+### Scene Commands
 
-Manage HomeAssistant configuration:
+```bash
+# List all scenes
+npm run ha scenes list
+
+# Activate a scene
+npm run ha scenes activate scene.movie_time --transition 2
+
+# Create scene from current state
+npm run ha scenes create scene.my_scene --entities light.bedroom_ceiling,light.living_room_lamp
+```
+
+### Script Commands
+
+```bash
+# List all scripts
+npm run ha scripts list
+
+# Get script details
+npm run ha scripts get script.morning_routine
+
+# Run a script
+npm run ha scripts run script.morning_routine
+
+# Run with variables
+npm run ha scripts run script.custom --data '{"room": "bedroom", "brightness": 150}'
+
+# Stop a running script
+npm run ha scripts stop script.long_running
+```
+
+### Automation Commands
+
+```bash
+# List all automations
+npm run ha automation list
+
+# Get automation details
+npm run ha automation get automation.morning_routine
+
+# Enable/disable
+npm run ha automation enable automation.morning_routine
+npm run ha automation disable automation.night_mode
+
+# Trigger manually
+npm run ha automation trigger automation.morning_routine
+npm run ha automation trigger automation.test --skip-condition
+```
+
+### Config Commands
 
 ```bash
 # Show configuration
@@ -169,68 +190,64 @@ npm run ha config reload
 
 # Validate configuration
 npm run ha config validate
-
-# Backup information
-npm run ha config backup
-```
-
-### Automation Commands
-
-Manage automations:
-
-```bash
-# List all automations
-npm run ha automation list
-
-# Get automation details
-npm run ha automation get automation.morning_routine
-
-# Enable an automation
-npm run ha automation enable automation.morning_routine
-
-# Disable an automation
-npm run ha automation disable automation.night_mode
-
-# Trigger an automation
-npm run ha automation trigger automation.morning_routine
-
-# Trigger with custom data
-npm run ha automation trigger automation.custom --data '{"room": "bedroom"}'
-
-# Skip conditions when triggering
-npm run ha automation trigger automation.test --skip-condition
 ```
 
 ### Adaptive Lighting Commands
 
-Control adaptive lighting:
-
 ```bash
-# Show adaptive lighting status
+# Show status
 npm run ha adaptive status
 
-# Enable globally
+# Enable/disable globally
 npm run ha adaptive enable --global
-
-# Disable globally
 npm run ha adaptive disable --global
 
 # Show light configuration
 npm run ha adaptive config light.bedroom_ceiling
 
-# Simulate adaptive lighting for current time
+# Simulate for current time
 npm run ha adaptive simulate
 
 # Simulate for specific date/time
 npm run ha adaptive simulate --date "2024-12-25T14:00:00Z"
-
-# Simulate for specific light
 npm run ha adaptive simulate --light light.bedroom_ceiling
 ```
 
-## Agent Usage Guide
+### Watch Commands
 
-This CLI is designed to be used by AI agents and automation scripts. Here's how to get started:
+```bash
+# Watch a specific entity
+npm run ha watch entity light.bedroom_ceiling
+
+# Watch with custom interval
+npm run ha watch entity light.bedroom_ceiling --interval 5
+
+# Watch all lights
+npm run ha watch lights
+
+# Watch lights in specific area
+npm run ha watch lights --area bedroom --interval 2
+```
+
+### Query Commands
+
+```bash
+# Find entities with filters
+npm run ha query find --domain light --state on
+npm run ha query find --name bedroom --unavailable
+npm run ha query find --attr area_id=bedroom
+
+# Count entities by domain
+npm run ha query count --by domain
+
+# Count by state
+npm run ha query count --by state
+
+# Get comprehensive statistics
+npm run ha query stats
+```
+
+## Agent Usage Guide
 
 ### Quick Start for Agents
 
@@ -238,125 +255,156 @@ This CLI is designed to be used by AI agents and automation scripts. Here's how 
 # 1. Verify connection
 npm run ha info
 
-# 2. Discover available lights
+# 2. Discover environment
+npm run ha query stats
 npm run ha lights list --supports-ct --json
 
-# 3. Control a light
+# 3. Control devices
 npm run ha lights on light.bedroom_ceiling --brightness 128 --kelvin 4000
 
-# 4. Batch operations (always dry-run first!)
-npm run ha lights batch on --area bedroom --dry-run
-npm run ha lights batch on --area bedroom
+# 4. Monitor changes
+npm run ha watch lights --area bedroom
 ```
 
 ### JSON Output for Parsing
 
-All commands support `--json` for machine-readable output:
+All commands support `--json`:
 
 ```bash
-# Get JSON output
+# Get JSON and parse with jq
 npm run ha lights list --json | jq '.[] | select(.state == "on")'
-
-# Parse entity data
 npm run ha entities get light.bedroom_ceiling --json | jq '.attributes'
-
-# Filter lights by capability
-npm run ha lights list --json | jq '.[] | select(.attributes.supported_color_modes | contains(["color_temp"]))'
+npm run ha query stats --json | jq '.lights_on'
 ```
 
 ### Common Agent Patterns
 
 **Pattern 1: Discover and Control**
 ```bash
-# Find all lights in a room
-npm run ha lights list --area bedroom --json > bedroom_lights.json
+# Find color-temp capable lights
+LIGHTS=$(npm run ha lights list --supports-ct --json)
 
-# Turn them all on with adaptive lighting
-npm run ha lights batch on --area bedroom --kelvin 3500 --brightness 150
+# Apply adaptive lighting
+npm run ha lights batch on --kelvin 3500 --brightness 150
 ```
 
-**Pattern 2: Check Status Before Action**
+**Pattern 2: Monitor and React**
 ```bash
-# Get current state
-STATE=$(npm run ha entities get light.bedroom_ceiling --json | jq -r '.state')
+# Watch for changes (in background)
+npm run ha watch lights --area bedroom &
 
-# Take action based on state
-if [ "$STATE" == "off" ]; then
-  npm run ha lights on light.bedroom_ceiling
-fi
+# React to changes in your script
+# (parse watch output or poll with query commands)
 ```
 
-**Pattern 3: Simulate Then Apply**
+**Pattern 3: Scene Management**
 ```bash
-# Simulate adaptive lighting
-SIMULATION=$(npm run ha adaptive simulate --json)
-KELVIN=$(echo $SIMULATION | jq -r '.kelvin')
-BRIGHTNESS=$(echo $SIMULATION | jq -r '.brightness')
+# Capture current state
+npm run ha scenes create scene.current_state --entities light.bedroom_ceiling,light.living_room
 
-# Apply to lights
-npm run ha lights set light.bedroom_ceiling --kelvin $KELVIN --brightness $BRIGHTNESS
+# Restore later
+npm run ha scenes activate scene.current_state
 ```
 
-### Error Handling
+**Pattern 4: Diagnostics**
+```bash
+# Find problems
+npm run ha query find --unavailable
 
-The CLI exits with non-zero status codes on errors:
+# Get statistics
+npm run ha query stats --json
+
+# Count by domain
+npm run ha query count --by domain
+```
+
+### Error Handling in Scripts
 
 ```bash
-# Check for errors in scripts
-if ! npm run ha info; then
+#!/bin/bash
+set -e  # Exit on error
+
+# Test connection
+if ! npm run ha info > /dev/null 2>&1; then
   echo "Failed to connect to HomeAssistant"
   exit 1
 fi
-```
 
-### Batch Operations Safety
-
-Always use `--dry-run` first:
-
-```bash
-# 1. Dry run to see what will happen
-npm run ha lights batch off --area living_room --dry-run
-
-# 2. Review the output
-
-# 3. Execute if correct
-npm run ha lights batch off --area living_room
+# Execute with error handling
+npm run ha lights batch on --area bedroom || {
+  echo "Failed to turn on bedroom lights"
+  exit 1
+}
 ```
 
 ## Examples
 
-### Morning Routine
+### Morning Routine Script
 
 ```bash
 #!/bin/bash
-# Turn on bedroom lights with warm color
-npm run ha lights on light.bedroom_ceiling --brightness 100 --kelvin 2700 --transition 5
+# morning.sh
+
+# Simulate adaptive lighting for current time
+SIMULATION=$(npm run ha adaptive simulate --json)
+KELVIN=$(echo $SIMULATION | jq -r '.kelvin')
+BRIGHTNESS=$(echo $SIMULATION | jq -r '.brightness')
+
+# Apply to bedroom
+npm run ha lights on light.bedroom_ceiling \
+  --kelvin $KELVIN \
+  --brightness $BRIGHTNESS \
+  --transition 5
 
 # Enable morning automation
 npm run ha automation enable automation.morning_routine
 ```
 
-### Evening Routine
+### Evening Routine Script
 
 ```bash
 #!/bin/bash
-# Simulate adaptive lighting for evening
+# evening.sh
+
+# Get adaptive lighting settings for evening
 SIMULATION=$(npm run ha adaptive simulate --json)
 KELVIN=$(echo $SIMULATION | jq -r '.kelvin')
 
-# Apply to all lights
-npm run ha lights batch on --area living_room --kelvin $KELVIN --brightness 150 --transition 10
+# Apply to living room with warm color
+npm run ha lights batch on \
+  --area living_room \
+  --kelvin $KELVIN \
+  --brightness 150 \
+  --transition 10
+
+# Activate evening scene
+npm run ha scenes activate scene.evening_relax
 ```
 
-### Night Mode
+### Night Mode Script
 
 ```bash
 #!/bin/bash
-# Dim all lights to warm color
-npm run ha lights batch on --kelvin 2000 --brightness 20 --transition 5
+# night.sh
 
-# Or turn them all off
-npm run ha lights batch off --transition 10
+# Very warm, very dim
+npm run ha lights batch on \
+  --kelvin 2000 \
+  --brightness 20 \
+  --transition 5
+
+# Or just turn them all off
+# npm run ha lights batch off --transition 10
+```
+
+### Monitor and Log Changes
+
+```bash
+#!/bin/bash
+# monitor.sh
+
+# Watch lights and log to file
+npm run ha watch lights --area bedroom 2>&1 | tee bedroom_lights.log
 ```
 
 ## Development
@@ -370,6 +418,9 @@ npm run build
 
 # Run built version
 npm start
+
+# Run CLI in development
+npm run ha -- <command>
 ```
 
 ## Architecture
@@ -380,29 +431,90 @@ ha-adaptive-lighting/
 │   ├── cli/
 │   │   ├── index.ts           # CLI entry point
 │   │   ├── commands/          # Command implementations
-│   │   │   ├── info.ts
-│   │   │   ├── entities.ts
-│   │   │   ├── lights.ts
-│   │   │   ├── config.ts
-│   │   │   ├── automation.ts
-│   │   │   └── adaptive.ts
-│   │   └── utils/             # CLI utilities
+│   │   │   ├── info.ts        # Instance info
+│   │   │   ├── entities.ts    # Entity management
+│   │   │   ├── lights.ts      # Light control
+│   │   │   ├── config.ts      # Configuration
+│   │   │   ├── automation.ts  # Automations
+│   │   │   ├── adaptive.ts    # Adaptive lighting
+│   │   │   ├── scenes.ts      # Scene management
+│   │   │   ├── watch.ts       # State monitoring
+│   │   │   ├── scripts.ts     # Script execution
+│   │   │   └── query.ts       # Advanced queries
+│   │   └── utils/
 │   │       ├── output.ts      # Formatting & display
 │   │       ├── ha-client.ts   # HA client singleton
 │   │       └── config.ts      # Configuration loading
-│   └── lib/                   # Core library
+│   └── lib/
 │       ├── ha-api.ts          # HomeAssistant REST API
-│       └── types.ts           # TypeScript types
+│       ├── types.ts           # TypeScript types
+│       └── validators.ts      # Input validation
 ├── bin/
 │   └── ha                     # Executable script
 └── package.json
 ```
 
+## Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `ha info` | Instance information and connection status |
+| `ha entities` | Query and manage entities |
+| `ha lights` | Control lights with advanced options |
+| `ha scenes` | Manage and activate scenes |
+| `ha scripts` | Execute and manage scripts |
+| `ha automation` | Control automations |
+| `ha config` | View and reload configuration |
+| `ha adaptive` | Adaptive lighting control |
+| `ha watch` | Monitor entity state changes |
+| `ha query` | Advanced filtering and statistics |
+
+## Troubleshooting
+
+### Connection Issues
+
+```bash
+# Test connection
+npm run ha info
+
+# Check .env file
+cat .env
+
+# Verify HA is accessible
+curl http://homeassistant.local:8123/api/ -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Token Issues
+
+- Ensure token hasn't expired
+- Generate new long-lived access token
+- Check token permissions in HomeAssistant
+
+### Command Not Found
+
+```bash
+# Ensure you're in project directory
+pwd
+
+# Install dependencies
+npm install
+
+# Use npm run ha instead of just ha
+npm run ha -- --help
+```
+
+### Dry-run Not Working
+
+```bash
+# Ensure you're using the correct syntax
+npm run ha lights batch on --area bedroom --dry-run
+
+# Not: npm run ha --dry-run lights batch on
+```
+
 ## API Reference
 
 ### HomeAssistantAPI Class
-
-The core API wrapper for HomeAssistant:
 
 ```typescript
 import { HomeAssistantAPI } from './lib/ha-api.js';
@@ -424,45 +536,24 @@ await client.turnOnLight('light.bedroom_ceiling', {
   kelvin: 4000,
   transition: 2
 });
-```
 
-## Troubleshooting
+// Get areas
+const areas = await client.getAreas();
 
-### Connection Issues
-
-```bash
-# Test connection
-npm run ha info
-
-# Check your .env file
-cat .env
-
-# Verify HA is accessible
-curl http://homeassistant.local:8123/api/ -H "Authorization: Bearer YOUR_TOKEN"
-```
-
-### Token Issues
-
-- Ensure your token hasn't expired
-- Generate a new long-lived access token
-- Check token permissions in HomeAssistant
-
-### Command Not Found
-
-```bash
-# Make sure you're in the project directory
-pwd
-
-# Install dependencies
-npm install
-
-# Use npm run ha instead of just ha
-npm run ha -- --help
+// Call any service
+await client.callService('light', 'turn_on', {
+  entity_id: 'light.bedroom_ceiling',
+  brightness: 255
+});
 ```
 
 ## Contributing
 
-This is a personal project, but suggestions and improvements are welcome!
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## License
 
@@ -470,10 +561,10 @@ MIT
 
 ## Acknowledgments
 
-- Built for use with [HomeAssistant](https://www.home-assistant.io/)
-- Designed for AI agent workflows and automation
-- Inspired by the need for better CLI control of smart homes
+- Built for [HomeAssistant](https://www.home-assistant.io/)
+- Designed for AI agent workflows
+- TypeScript for type safety and developer experience
 
 ---
 
-**For Agents:** This CLI provides complete control over HomeAssistant via REST API. All commands support `--json` output for parsing. Use `--dry-run` for batch operations. Always verify connection with `npm run ha info` before starting work.
+**For Agents:** This CLI provides complete HomeAssistant control via REST API. All commands support `--json` output. Use `--dry-run` for batch operations. Start with `npm run ha info` to verify connection, then explore with `npm run ha query stats`.

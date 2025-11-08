@@ -50,3 +50,33 @@ All notable changes to this project will be documented in this file.
 - Agent usage guide
 - Troubleshooting section
 - API reference
+
+## [1.1.0] - 2024-11-08
+
+### Added - Enhancements
+- Scene management commands (list, activate, create)
+- State monitoring and watch mode for real-time changes
+- Script execution support (list, run, stop)
+- Advanced query capabilities (find, count, stats)
+- Complex filtering by attributes
+- Statistics dashboard command
+- Pattern matching for entity discovery
+
+### Features
+- 🎬 Scene creation from current state
+- 👁️ Real-time entity monitoring
+- 📜 Script execution with variables
+- 🔍 Advanced entity queries
+- 📊 Comprehensive statistics
+
+### New Commands
+- `ha scenes` - Scene management
+- `ha scripts` - Script execution
+- `ha watch` - Real-time monitoring
+- `ha query` - Advanced queries and stats
+
+### Improvements
+- Better filtering across all commands
+- Enhanced agent usage patterns
+- More examples and documentation
+- Comprehensive statistics view
