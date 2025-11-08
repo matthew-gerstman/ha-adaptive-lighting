@@ -15,20 +15,23 @@ export function createServicesCommand(): Command {
       try {
         const spin = output.spinner('Fetching services...');
         const client = getHAClient();
-        const serviceData = await client.getServices();
+        const serviceData: any = await client.getServices();
         spin.stop();
 
         let services: any[] = [];
         Object.entries(serviceData).forEach(([domain, data]: [string, any]) => {
           if (options.domain && domain !== options.domain) return;
           
-          Object.entries(data.services || data).forEach(([service, details]: [string, any]) => {
-            services.push({
-              domain,
-              service,
-              name: details.name || service,
-              description: details.description || 'No description'
-            });
+          const svcObj = data.services || data || {};
+          Object.entries(svcObj).forEach(([service, details]: [string, any]) => {
+            if (typeof details === 'object' && details !== null) {
+              services.push({
+                domain,
+                service,
+                name: details.name || service,
+                description: details.description || 'No description'
+              });
+            }
           });
         });
 
@@ -68,17 +71,18 @@ export function createServicesCommand(): Command {
       try {
         const spin = output.spinner(`Fetching ${domain}.${service}...`);
         const client = getHAClient();
-        const serviceData = await client.getServices();
+        const serviceData: any = await client.getServices();
         spin.stop();
 
-        const domainData = serviceData[domain as keyof typeof serviceData];
+        const domainData: any = serviceData[domain];
         if (!domainData) {
           output.error(`Domain '${domain}' not found`);
           process.exit(1);
         }
 
-        const svcData = (domainData.services || domainData)[service];
-        if (!svcData) {
+        const svcObj: any = domainData.services || domainData || {};
+        const svcData: any = svcObj[service];
+        if (!svcData || typeof svcData !== 'object') {
           output.error(`Service '${service}' not found in domain '${domain}'`);
           process.exit(1);
         }

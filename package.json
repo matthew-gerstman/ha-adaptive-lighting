@@ -1,6 +1,6 @@
 {
   "name": "ha-adaptive-lighting",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript CLI utility for HomeAssistant control and automation",
   "type": "module",
   "main": "dist/index.js",
@@ -8,9 +8,9 @@
     "ha": "./bin/ha"
   },
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/cli/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/cli/index.js",
     "ha": "tsx src/cli/index.ts"
   },
   "keywords": ["home-assistant", "cli", "automation", "lights"],
