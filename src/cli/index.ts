@@ -7,6 +7,7 @@ import { createConfigCommand } from './commands/config.js';
 import { createAutomationCommand } from './commands/automation.js';
 import { createAdaptiveCommand } from './commands/adaptive.js';
 import { createScenesCommand } from './commands/scenes.js';
+import { createWatchCommand } from './commands/watch.js';
 
 const program = new Command();
 
@@ -23,5 +24,6 @@ program.addCommand(createConfigCommand());
 program.addCommand(createAutomationCommand());
 program.addCommand(createAdaptiveCommand());
 program.addCommand(createScenesCommand());
+program.addCommand(createWatchCommand());
 
 program.parse();
