@@ -5,6 +5,7 @@ import { createInfoCommand } from './commands/info.js';
 import { createEntitiesCommand } from './commands/entities.js';
 import { createLightsCommand } from './commands/lights.js';
 import { createConfigCommand } from './commands/config.js';
+import { createAutomationCommand } from './commands/automation.js';
 
 const program = new Command();
 
@@ -18,15 +19,9 @@ program.addCommand(createInfoCommand());
 program.addCommand(createEntitiesCommand());
 program.addCommand(createLightsCommand());
 program.addCommand(createConfigCommand());
+program.addCommand(createAutomationCommand());
 
-// Placeholder commands
-program
-  .command('automation')
-  .description('Manage automations')
-  .action(() => {
-    console.log(chalk.yellow('Automation command - coming soon'));
-  });
-
+// Placeholder command
 program
   .command('adaptive')
   .description('Control adaptive lighting')
