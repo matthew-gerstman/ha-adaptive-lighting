@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { createInfoCommand } from './commands/info.js';
 import { createEntitiesCommand } from './commands/entities.js';
+import { createLightsCommand } from './commands/lights.js';
 
 const program = new Command();
 
@@ -14,15 +15,9 @@ program
 // Add commands
 program.addCommand(createInfoCommand());
 program.addCommand(createEntitiesCommand());
+program.addCommand(createLightsCommand());
 
 // Placeholder commands
-program
-  .command('lights')
-  .description('Control and query lights')
-  .action(() => {
-    console.log(chalk.yellow('Lights command - coming soon'));
-  });
-
 program
   .command('config')
   .description('Update HomeAssistant configuration')
