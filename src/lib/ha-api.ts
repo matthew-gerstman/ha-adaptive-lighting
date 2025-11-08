@@ -1,13 +1,16 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import type { HAConfig, HAEntity, HAArea, HAService, HAAutomation, ServiceCallData } from './types.js';
 import { validateEntityId, validateBrightness, validateKelvin, validateRGB, validateTransition } from './validators.js';
+import { entityCache } from './cache.js';
 
 export class HomeAssistantAPI {
   private client: AxiosInstance;
   private config: HAConfig;
+  private useCache: boolean = true;
 
-  constructor(config: HAConfig) {
+  constructor(config: HAConfig, useCache: boolean = true) {
     this.config = config;
+    this.useCache = useCache;
     this.client = axios.create({
       baseURL: config.baseUrl,
       headers: {
@@ -17,7 +20,6 @@ export class HomeAssistantAPI {
       timeout: 10000,
     });
 
-    // Add response interceptor for better error messages
     this.client.interceptors.response.use(
       response => response,
       (error: AxiosError) => {
@@ -33,7 +35,6 @@ export class HomeAssistantAPI {
     );
   }
 
-  // Test connection
   async testConnection(): Promise<boolean> {
     try {
       await this.client.get('/api/');
@@ -43,26 +44,35 @@ export class HomeAssistantAPI {
     }
   }
 
-  // Get API config
   async getConfig(): Promise<any> {
     const response = await this.client.get('/api/config');
     return response.data;
   }
 
-  // Get all states
   async getStates(): Promise<HAEntity[]> {
+    // Check cache first
+    if (this.useCache) {
+      const cached = entityCache.get('all_states');
+      if (cached) return cached;
+    }
+
     const response = await this.client.get('/api/states');
-    return response.data;
+    const data = response.data;
+
+    // Cache the result
+    if (this.useCache) {
+      entityCache.set('all_states', data);
+    }
+
+    return data;
   }
 
-  // Get specific entity state
   async getState(entityId: string): Promise<HAEntity> {
     validateEntityId(entityId);
     const response = await this.client.get(`/api/states/${entityId}`);
     return response.data;
   }
 
-  // Get entity history
   async getHistory(entityId: string, hours: number = 24): Promise<any> {
     validateEntityId(entityId);
     
@@ -79,10 +89,14 @@ export class HomeAssistantAPI {
     return response.data;
   }
 
-  // Call service
   async callService(domain: string, service: string, data: ServiceCallData = {}): Promise<any> {
     if (!domain || !service) {
       throw new Error('Domain and service are required');
+    }
+
+    // Clear cache after state-changing operations
+    if (this.useCache) {
+      entityCache.clear();
     }
 
     const response = await this.client.post(
@@ -92,24 +106,20 @@ export class HomeAssistantAPI {
     return response.data;
   }
 
-  // Get services
   async getServices(): Promise<HAService[]> {
     const response = await this.client.get('/api/services');
     return response.data;
   }
 
-  // Get areas (requires newer HA versions)
   async getAreas(): Promise<HAArea[]> {
     try {
       const response = await this.client.get('/api/config/area_registry/list');
       return response.data;
     } catch (error) {
-      // Fallback if API not available
       return [];
     }
   }
 
-  // Light-specific methods
   async turnOnLight(entityId: string, options: {
     brightness?: number;
     kelvin?: number;
@@ -154,7 +164,6 @@ export class HomeAssistantAPI {
     await this.callService('light', 'turn_off', data);
   }
 
-  // Automation methods
   async getAutomations(): Promise<HAEntity[]> {
     const states = await this.getStates();
     return states.filter(e => e.entity_id.startsWith('automation.'));
@@ -178,12 +187,15 @@ export class HomeAssistantAPI {
     await this.callService('automation', 'turn_off', { entity_id: automationId });
   }
 
-  // Config methods
   async reloadConfig(): Promise<void> {
     await this.callService('homeassistant', 'reload_core_config', {});
   }
 
   async checkConfig(): Promise<any> {
     await this.callService('homeassistant', 'check_config', {});
+  }
+
+  clearCache(): void {
+    entityCache.clear();
   }
 }
