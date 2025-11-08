@@ -568,3 +568,31 @@ MIT
 ---
 
 **For Agents:** This CLI provides complete HomeAssistant control via REST API. All commands support `--json` output. Use `--dry-run` for batch operations. Start with `npm run ha info` to verify connection, then explore with `npm run ha query stats`.
+
+## Recent Updates (v1.1.0)
+
+### New Commands
+- `ha scenes` - Scene management (list, activate, create)
+- `ha scripts` - Script execution (list, run, stop, get)
+- `ha watch` - Real-time monitoring (entity, lights)
+- `ha query` - Advanced queries (find, count, stats)
+- `ha switches` - Switch control (list, on, off, toggle)
+- `ha climate` - Climate control (list, get, set-temp, set-mode)
+- `ha services` - Service discovery (list, get, call)
+
+### Example Scripts
+Check the `examples/` directory for ready-to-use automation scripts:
+- Morning routine with gradual wake-up
+- Evening routine with warm lighting
+- Night mode for sleep preparation
+- Real-time monitoring with logging
+- Adaptive lighting sync for all lights
+- System diagnostics and health checks
+
+### Performance Improvements
+- Entity caching with 5-second TTL
+- Reduced API calls for repeated queries
+- Faster batch operations
+- Optimized filtering
+
+See [CHANGELOG.md](CHANGELOG.md) for complete version history.
