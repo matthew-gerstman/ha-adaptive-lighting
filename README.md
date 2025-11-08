@@ -1,134 +1,479 @@
-# Home Assistant Adaptive Lighting Configuration
+# HomeAssistant CLI
 
-**HomeKit-style circadian rhythm lighting for Matthew Gerstman's Home Assistant Green**
+A comprehensive TypeScript CLI utility for controlling and managing your HomeAssistant instance. Built for automation, scripting, and agent-driven workflows.
 
-## What This Is
+## Features
 
-Complete Home Assistant configuration for adaptive lighting using the battle-tested [Adaptive Lighting HACS integration](https://github.com/basnijholt/adaptive-lighting). No external services required - runs natively inside Home Assistant.
+- 🏠 **Complete HA Control** - Manage lights, entities, automations, and configuration
+- 🤖 **Agent-Friendly** - Designed for AI agents and automation scripts
+- 📊 **Rich Output** - Human-readable tables or JSON for parsing
+- 🎨 **Adaptive Lighting** - Built-in adaptive lighting simulation and control
+- ⚡ **Batch Operations** - Control multiple devices with dry-run support
+- 🔒 **Safe** - Dry-run mode, validation, and clear error messages
 
-## Quick Start
+## Installation
 
-1. **Install Adaptive Lighting** via HACS
-2. **Copy** `config/packages/adaptive_lighting.yaml` to your `/config/packages/` directory
-3. **Restart** Home Assistant
-4. **Enable zones** via the switches created
-5. **Test** starting with Kitchen zone
-6. **Adjust** based on your preferences
+```bash
+# Clone the repository
+git clone https://github.com/matthew-gerstman/ha-adaptive-lighting.git
+cd ha-adaptive-lighting
 
-Full instructions: [config/README.md](config/README.md)
+# Install dependencies
+npm install
 
-## What's Included
+# Build (optional, for production)
+npm run build
+```
 
-### 📊 Analysis
-- **76 color-temp capable lights** identified
-- **6 zones configured** with different strategies
-- **Current state analysis** showing what needs to change
+## Configuration
 
-### ⚙️ Configuration
-- **6 adaptive lighting zones:**
-  - Kitchen (task lighting)
-  - Laundry Room (utility)
-  - Rec Room (multi-use)
-  - Office (productivity)
-  - Living Room (flexible)
-  - Bedroom (sleep-optimized)
-- **46 lights** will be actively managed
-- **20 decorative lights** excluded (manual control)
-- **30 brightness-only lights** (not capable)
+Create a `.env` file in the project root:
 
-### 📖 Documentation
-- Installation guide
-- Customization instructions  
-- Dry run report with scenarios
-- Implementation plan
+```bash
+HASS_BASE_URL=http://homeassistant.local:8123
+HASS_TOKEN=your_long_lived_access_token
+```
 
-## Key Features
+### Getting a Long-Lived Access Token
 
-✅ **HomeKit-style circadian rhythm** - 2700K sunrise → 4500K midday → 2700K sunset  
-✅ **Automatic manual override detection** - Pauses when you adjust lights  
-✅ **Sleep mode** - 2000K very warm light for bedtime  
-✅ **Per-room customization** - Different curves for different spaces  
-✅ **No external service** - Runs natively in Home Assistant  
-✅ **Version controlled** - All config in Git
+1. Open your HomeAssistant instance
+2. Click on your profile (bottom left)
+3. Scroll to "Long-Lived Access Tokens"
+4. Click "Create Token"
+5. Give it a name (e.g., "CLI Access")
+6. Copy the token to your `.env` file
 
-## Your Lighting Zones
+### Optional Configuration File
 
-| Zone | Lights | Strategy | Color Temp Range |
-|------|--------|----------|------------------|
-| Kitchen | 1 | Always adaptive | 3000K - 5500K |
-| Laundry | 9 | Always adaptive | 2700K - 5500K |
-| Rec Room | 6 | Always adaptive | 2700K - 5000K |
-| Office | 4 | Always adaptive | 3500K - 5500K |
-| Living Room | 6 | Conditional (respects colors) | 2700K - 4500K |
-| Bedroom | 11 | Sleep-optimized | 2500K - 4000K |
+Create `ha-cli.config.json` for additional settings:
 
-## Current Issues Addressed
+```json
+{
+  "defaults": {
+    "transition": 1,
+    "outputFormat": "table"
+  },
+  "aliases": {
+    "bedroom": "light.bedroom_ceiling",
+    "living": "light.living_room_ceiling"
+  }
+}
+```
 
-**Problem:** 24 lights currently in xy (color) mode won't respond to white temperature changes.
+## Usage
 
-**Solution:** Adaptive Lighting will switch them to color_temp mode, or you can exclude decorative lights that should stay in color mode.
+```bash
+# Run commands
+npm run ha -- <command> [options]
 
-**Problem:** Manual color temperature adjustments throughout the day.
+# Or after building
+node dist/cli/index.js <command> [options]
+```
 
-**Solution:** Automatic circadian curve handles this. Lights adjust every 60-120 seconds with smooth 30-60 second transitions.
+## Commands
 
-## Files
+### Info Commands
+
+Get information about your HomeAssistant instance:
+
+```bash
+# Show connection status and instance info
+npm run ha info
+
+# List all areas
+npm run ha info areas
+
+# List all domains with entity counts
+npm run ha info domains
+```
+
+### Entity Commands
+
+Query and manage entities:
+
+```bash
+# List all entities
+npm run ha entities list
+
+# Filter by domain
+npm run ha entities list --domain light
+
+# Search by name
+npm run ha entities list --search bedroom
+
+# Get detailed entity info
+npm run ha entities get light.bedroom_ceiling
+
+# Get entity with history
+npm run ha entities get light.bedroom_ceiling --history 24
+
+# Call a service on an entity
+npm run ha entities call light.bedroom_ceiling turn_on --data '{"brightness": 255}'
+
+# JSON output for parsing
+npm run ha entities list --json
+```
+
+### Light Commands
+
+Control lights with advanced options:
+
+```bash
+# List all lights
+npm run ha lights list
+
+# Filter lights
+npm run ha lights list --state on
+npm run ha lights list --supports-ct
+npm run ha lights list --area bedroom
+
+# Get light details
+npm run ha lights get light.bedroom_ceiling
+
+# Turn on a light
+npm run ha lights on light.bedroom_ceiling
+
+# Turn on with options
+npm run ha lights on light.bedroom_ceiling --brightness 128 --kelvin 4000 --transition 2
+
+# Turn off a light
+npm run ha lights off light.bedroom_ceiling --transition 1
+
+# Set light properties
+npm run ha lights set light.bedroom_ceiling --brightness 200 --kelvin 3000
+
+# Set RGB color
+npm run ha lights set light.living_room_lamp --rgb 255,128,0
+
+# Batch operations (DRY RUN FIRST!)
+npm run ha lights batch on --area bedroom --dry-run
+npm run ha lights batch on --area bedroom --brightness 150 --kelvin 3500
+
+# Batch turn off with transition
+npm run ha lights batch off --area living_room --transition 2
+```
+
+### Config Commands
+
+Manage HomeAssistant configuration:
+
+```bash
+# Show configuration
+npm run ha config show
+
+# Show specific section
+npm run ha config show --section unit_system
+
+# Reload configuration
+npm run ha config reload
+
+# Validate configuration
+npm run ha config validate
+
+# Backup information
+npm run ha config backup
+```
+
+### Automation Commands
+
+Manage automations:
+
+```bash
+# List all automations
+npm run ha automation list
+
+# Get automation details
+npm run ha automation get automation.morning_routine
+
+# Enable an automation
+npm run ha automation enable automation.morning_routine
+
+# Disable an automation
+npm run ha automation disable automation.night_mode
+
+# Trigger an automation
+npm run ha automation trigger automation.morning_routine
+
+# Trigger with custom data
+npm run ha automation trigger automation.custom --data '{"room": "bedroom"}'
+
+# Skip conditions when triggering
+npm run ha automation trigger automation.test --skip-condition
+```
+
+### Adaptive Lighting Commands
+
+Control adaptive lighting:
+
+```bash
+# Show adaptive lighting status
+npm run ha adaptive status
+
+# Enable globally
+npm run ha adaptive enable --global
+
+# Disable globally
+npm run ha adaptive disable --global
+
+# Show light configuration
+npm run ha adaptive config light.bedroom_ceiling
+
+# Simulate adaptive lighting for current time
+npm run ha adaptive simulate
+
+# Simulate for specific date/time
+npm run ha adaptive simulate --date "2024-12-25T14:00:00Z"
+
+# Simulate for specific light
+npm run ha adaptive simulate --light light.bedroom_ceiling
+```
+
+## Agent Usage Guide
+
+This CLI is designed to be used by AI agents and automation scripts. Here's how to get started:
+
+### Quick Start for Agents
+
+```bash
+# 1. Verify connection
+npm run ha info
+
+# 2. Discover available lights
+npm run ha lights list --supports-ct --json
+
+# 3. Control a light
+npm run ha lights on light.bedroom_ceiling --brightness 128 --kelvin 4000
+
+# 4. Batch operations (always dry-run first!)
+npm run ha lights batch on --area bedroom --dry-run
+npm run ha lights batch on --area bedroom
+```
+
+### JSON Output for Parsing
+
+All commands support `--json` for machine-readable output:
+
+```bash
+# Get JSON output
+npm run ha lights list --json | jq '.[] | select(.state == "on")'
+
+# Parse entity data
+npm run ha entities get light.bedroom_ceiling --json | jq '.attributes'
+
+# Filter lights by capability
+npm run ha lights list --json | jq '.[] | select(.attributes.supported_color_modes | contains(["color_temp"]))'
+```
+
+### Common Agent Patterns
+
+**Pattern 1: Discover and Control**
+```bash
+# Find all lights in a room
+npm run ha lights list --area bedroom --json > bedroom_lights.json
+
+# Turn them all on with adaptive lighting
+npm run ha lights batch on --area bedroom --kelvin 3500 --brightness 150
+```
+
+**Pattern 2: Check Status Before Action**
+```bash
+# Get current state
+STATE=$(npm run ha entities get light.bedroom_ceiling --json | jq -r '.state')
+
+# Take action based on state
+if [ "$STATE" == "off" ]; then
+  npm run ha lights on light.bedroom_ceiling
+fi
+```
+
+**Pattern 3: Simulate Then Apply**
+```bash
+# Simulate adaptive lighting
+SIMULATION=$(npm run ha adaptive simulate --json)
+KELVIN=$(echo $SIMULATION | jq -r '.kelvin')
+BRIGHTNESS=$(echo $SIMULATION | jq -r '.brightness')
+
+# Apply to lights
+npm run ha lights set light.bedroom_ceiling --kelvin $KELVIN --brightness $BRIGHTNESS
+```
+
+### Error Handling
+
+The CLI exits with non-zero status codes on errors:
+
+```bash
+# Check for errors in scripts
+if ! npm run ha info; then
+  echo "Failed to connect to HomeAssistant"
+  exit 1
+fi
+```
+
+### Batch Operations Safety
+
+Always use `--dry-run` first:
+
+```bash
+# 1. Dry run to see what will happen
+npm run ha lights batch off --area living_room --dry-run
+
+# 2. Review the output
+
+# 3. Execute if correct
+npm run ha lights batch off --area living_room
+```
+
+## Examples
+
+### Morning Routine
+
+```bash
+#!/bin/bash
+# Turn on bedroom lights with warm color
+npm run ha lights on light.bedroom_ceiling --brightness 100 --kelvin 2700 --transition 5
+
+# Enable morning automation
+npm run ha automation enable automation.morning_routine
+```
+
+### Evening Routine
+
+```bash
+#!/bin/bash
+# Simulate adaptive lighting for evening
+SIMULATION=$(npm run ha adaptive simulate --json)
+KELVIN=$(echo $SIMULATION | jq -r '.kelvin')
+
+# Apply to all lights
+npm run ha lights batch on --area living_room --kelvin $KELVIN --brightness 150 --transition 10
+```
+
+### Night Mode
+
+```bash
+#!/bin/bash
+# Dim all lights to warm color
+npm run ha lights batch on --kelvin 2000 --brightness 20 --transition 5
+
+# Or turn them all off
+npm run ha lights batch off --transition 10
+```
+
+## Development
+
+```bash
+# Run in development mode with auto-reload
+npm run dev
+
+# Build for production
+npm run build
+
+# Run built version
+npm start
+```
+
+## Architecture
 
 ```
 ha-adaptive-lighting/
-├── config/
-│   ├── packages/
-│   │   └── adaptive_lighting.yaml    # Main configuration
-│   ├── README.md                      # Installation guide
-│   └── CUSTOMIZATION.md               # Adjustment guide
-├── analysis/
-│   ├── color-temp-capable-lights.csv  # 76 adaptive lights
-│   └── light-inventory-summary.json   # Complete analysis
-├── docs/
-│   ├── DRY_RUN_REPORT.md              # Detailed scenarios
-│   └── IMPLEMENTATION_PLAN.md         # Full strategy
-└── README.md                          # This file
+├── src/
+│   ├── cli/
+│   │   ├── index.ts           # CLI entry point
+│   │   ├── commands/          # Command implementations
+│   │   │   ├── info.ts
+│   │   │   ├── entities.ts
+│   │   │   ├── lights.ts
+│   │   │   ├── config.ts
+│   │   │   ├── automation.ts
+│   │   │   └── adaptive.ts
+│   │   └── utils/             # CLI utilities
+│   │       ├── output.ts      # Formatting & display
+│   │       ├── ha-client.ts   # HA client singleton
+│   │       └── config.ts      # Configuration loading
+│   └── lib/                   # Core library
+│       ├── ha-api.ts          # HomeAssistant REST API
+│       └── types.ts           # TypeScript types
+├── bin/
+│   └── ha                     # Executable script
+└── package.json
 ```
 
-## Next Steps
+## API Reference
 
-1. **Read the dry run report** - [docs/DRY_RUN_REPORT.md](docs/DRY_RUN_REPORT.md)
-2. **Install Adaptive Lighting** via HACS
-3. **Copy configuration** to your Home Assistant
-4. **Test Kitchen zone** first
-5. **Report results** - Obvious will adjust based on feedback
-6. **Enable other zones** once satisfied
+### HomeAssistantAPI Class
 
-## Working with Obvious
+The core API wrapper for HomeAssistant:
 
-This configuration is designed for iterative refinement:
-1. You test and report what feels wrong
-2. Obvious updates the YAML in this repo
-3. You pull changes and copy to HA
-4. Test again
-5. Repeat until perfect
+```typescript
+import { HomeAssistantAPI } from './lib/ha-api.js';
 
-All changes are tracked in Git for easy rollback.
+const client = new HomeAssistantAPI({
+  baseUrl: 'http://homeassistant.local:8123',
+  token: 'your_token_here'
+});
 
-## Why Not TypeScript Service?
+// Test connection
+await client.testConnection();
 
-The original plan was a TypeScript service using Digital Alchemy. However, since you want **Home Assistant native configuration** without running external services, we're using the HACS Adaptive Lighting integration instead.
+// Get all entities
+const states = await client.getStates();
 
-**Advantages:**
-- No separate service to maintain
-- Runs inside Home Assistant
-- Battle-tested (2.3k GitHub stars)
-- Auto-updates via HACS
-- Lower resource usage
+// Control a light
+await client.turnOnLight('light.bedroom_ceiling', {
+  brightness: 128,
+  kelvin: 4000,
+  transition: 2
+});
+```
 
-**The TypeScript code is still here** if you ever want to extend beyond what the integration offers.
+## Troubleshooting
+
+### Connection Issues
+
+```bash
+# Test connection
+npm run ha info
+
+# Check your .env file
+cat .env
+
+# Verify HA is accessible
+curl http://homeassistant.local:8123/api/ -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Token Issues
+
+- Ensure your token hasn't expired
+- Generate a new long-lived access token
+- Check token permissions in HomeAssistant
+
+### Command Not Found
+
+```bash
+# Make sure you're in the project directory
+pwd
+
+# Install dependencies
+npm install
+
+# Use npm run ha instead of just ha
+npm run ha -- --help
+```
+
+## Contributing
+
+This is a personal project, but suggestions and improvements are welcome!
 
 ## License
 
 MIT
 
+## Acknowledgments
+
+- Built for use with [HomeAssistant](https://www.home-assistant.io/)
+- Designed for AI agent workflows and automation
+- Inspired by the need for better CLI control of smart homes
+
 ---
 
-**Repository:** https://github.com/matthew-gerstman/ha-adaptive-lighting  
-**Generated by:** Obvious AI  
-**Last Updated:** November 8, 2025
+**For Agents:** This CLI provides complete control over HomeAssistant via REST API. All commands support `--json` output for parsing. Use `--dry-run` for batch operations. Always verify connection with `npm run ha info` before starting work.
