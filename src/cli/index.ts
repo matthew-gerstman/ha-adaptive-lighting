@@ -9,6 +9,7 @@ import { createAdaptiveCommand } from './commands/adaptive.js';
 import { createScenesCommand } from './commands/scenes.js';
 import { createWatchCommand } from './commands/watch.js';
 import { createScriptsCommand } from './commands/scripts.js';
+import { createQueryCommand } from './commands/query.js';
 
 const program = new Command();
 
@@ -27,5 +28,6 @@ program.addCommand(createAdaptiveCommand());
 program.addCommand(createScenesCommand());
 program.addCommand(createWatchCommand());
 program.addCommand(createScriptsCommand());
+program.addCommand(createQueryCommand());
 
 program.parse();
