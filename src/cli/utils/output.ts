@@ -7,14 +7,19 @@ export function outputJSON(data: any): void {
 }
 
 export function createTable(head: string[], colWidths?: number[]): Table.Table {
-  return new Table({
+  const config: any = {
     head: head.map(h => chalk.cyan.bold(h)),
-    colWidths,
     style: {
       head: [],
       border: ['gray']
     }
-  });
+  };
+  
+  if (colWidths && colWidths.length > 0) {
+    config.colWidths = colWidths;
+  }
+  
+  return new Table(config);
 }
 
 export function success(message: string): void {
