@@ -1,0 +1,28 @@
+{
+  "name": "ha-adaptive-lighting",
+  "version": "1.0.0",
+  "description": "TypeScript-based adaptive lighting automation for Home Assistant",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-writer": "type-writer"
+  },
+  "keywords": ["home-assistant", "adaptive-lighting", "circadian", "automation"],
+  "author": "Matthew Gerstman",
+  "license": "MIT",
+  "dependencies": {
+    "@digital-alchemy/core": "^0.5.0",
+    "@digital-alchemy/hass": "^0.5.0",
+    "@digital-alchemy/synapse": "^0.5.0",
+    "@digital-alchemy/automation": "^0.5.0"
+  },
+  "devDependencies": {
+    "@digital-alchemy/type-writer": "^0.5.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
