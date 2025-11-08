@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { createInfoCommand } from './commands/info.js';
 
 const program = new Command();
 
@@ -9,13 +10,10 @@ program
   .description('HomeAssistant CLI utility for controlling your smart home')
   .version('1.0.0');
 
-program
-  .command('info')
-  .description('Show HomeAssistant instance information')
-  .action(() => {
-    console.log(chalk.yellow('Info command - coming soon'));
-  });
+// Add info command
+program.addCommand(createInfoCommand());
 
+// Placeholder commands
 program
   .command('lights')
   .description('Control and query lights')
