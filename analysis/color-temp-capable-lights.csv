@@ -1,0 +1,77 @@
+entity_id,name,state,current_mode,current_kelvin,min_kelvin,max_kelvin,status
+light.bedroom_ceiling,Bedroom Ceiling,on,color_temp,2857,2000,6535,Ready
+light.japanese_lamp,Japanese Lamp,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.server_closet,Server Closet,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.laundry_room_ceiling,Laundry Room Ceiling,on,color_temp,3344,2202,6535,Ready
+light.hydra_lamp,Hydra Lamp,on,color_temp,4348,2000,6535,Ready
+light.fabric_lamp,Fabric Lamp,unavailable,N/A,,2000,6535,Unavailable
+light.living_room_tv_lights,Living Room TV Lights,on,color_temp,3521,2000,6535,Ready
+light.bedroom_tv_lights,Bedroom TV Lights,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.rose_lamp,Rose Lamp,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_1_3,Pixar 2,on,color_temp,2732,2000,6535,Ready
+light.laundry_ceiling_4,Laundry Ceiling 4,on,color_temp,3344,2202,6535,Ready
+light.hue_ambiance_spot_1_2,Rec Ceiling 6,on,color_temp,4348,2202,6535,Ready
+light.outdoor_lightstrip_left,Outdoor Lightstrip Left,off,N/A,,2000,6535,Ready
+light.hydra_1,Hydra 1,on,color_temp,4348,2000,6535,Ready
+light.laundry_ceiling_1,Laundry Ceiling 1,on,color_temp,3344,2202,6535,Ready
+light.hue_ambiance_spot_2,Rec Ceiling 2,on,color_temp,4348,2202,6535,Ready
+light.laundry_ceiling_3,Laundry Ceiling 3,on,color_temp,3344,2202,6535,Ready
+light.laundry_ceiling_6,Laundry Ceiling 6,on,color_temp,3344,2202,6535,Ready
+light.hue_ambiance_spot_4,Rec Ceiling 4,on,color_temp,4348,2202,6535,Ready
+light.outdoor_lightstrip_center,Outdoor Lightstrip Center,off,N/A,,2000,6535,Ready
+light.festavia_string_lights_1,Festavia string lights 1,off,N/A,,2000,6535,Ready
+light.outdoor_lightstrip_right,Outdoor Lightstrip Right,off,N/A,,2000,6535,Ready
+light.hue_ambiance_spot_5,Rec Ceiling 5,on,color_temp,4348,2202,6535,Ready
+light.laundry_ceiling_2,Laundry Ceiling 2,on,color_temp,3344,2202,6535,Ready
+light.hydra_3,Hydra 3,on,color_temp,4348,2000,6535,Ready
+light.laundry_ceiling_5,Laundry Ceiling 5,on,color_temp,3344,2202,6535,Ready
+light.hydra_2,Hydra 2,on,color_temp,4348,2000,6535,Ready
+light.hue_ambiance_spot_1,Rec Ceiling 1,on,color_temp,4348,2202,6535,Ready
+light.hue_ambiance_spot_3,Rec Ceiling 3,on,color_temp,4348,2202,6535,Ready
+light.electrical_room,Electrical Room,on,color_temp,2732,2000,6535,Ready
+light.backyard,Backyard Lights,off,N/A,,2000,6535,Ready
+light.rec_room,Rec Room,on,color_temp,4348,2202,6535,Ready
+light.laundry_room,Laundry room,on,color_temp,3344,2202,6535,Ready
+light.signe_gradient_table_2,Signe gradient table 2,on,color_temp,3521,2000,6535,Ready
+light.signe_gradient_table_1,Signe gradient table 1,on,color_temp,3521,2000,6535,Ready
+light.hue_ambiance_lamp_2,Hue ambiance lamp 2,on,color_temp,4348,2202,6535,Ready
+light.hue_play_gradient_lightstrip_1,Hue play gradient lightstrip 1,on,color_temp,3521,2000,6535,Ready
+light.hue_color_lamp_3_3,Fabric Bottom,unavailable,N/A,,2000,6535,Unavailable
+light.play_gradient_tube_1,Play gradient tube 1,unavailable,N/A,,2000,6535,Unavailable
+light.hue_color_lamp_1_4,Doctor Who Lamp,on,color_temp,3521,2000,6535,Ready
+light.hue_color_lamp_3,Table lamp,unavailable,N/A,,2000,6535,Unavailable
+light.hue_color_lamp_1,Window Lamp,unavailable,N/A,,2000,6535,Unavailable
+light.hue_ambiance_lamp_1,Hue ambiance lamp 1,on,color_temp,4348,2202,6535,Ready
+light.living_room,Living room,on,color_temp,3521,2000,6535,Ready
+light.kitchen,Kitchen,on,color_temp,4348,2202,6535,Ready
+light.hue_play_wall_washer_1,Hue Play wall washer 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_play_1,Hue play 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_6,Rose Lamp 3,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_candle_1,Hue color candle 1,on,color_temp,2857,2000,6535,Ready
+light.hue_lightguide_bulb_1,Matthew’s  Sconce,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_play_3,Hue Play 3,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_sana_wall_1,Hue Sana Top,off,N/A,,2000,6535,Ready
+light.hue_color_candle_4,Hue color candle 4,on,color_temp,2857,2000,6535,Ready
+light.hue_color_lamp_4,Owl Lamp,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_candle_6,Hue color candle 6,on,color_temp,2857,2000,6535,Ready
+light.hue_bloom_1,Hue bloom 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_candle_5,Hue color candle 5,on,color_temp,2857,2000,6535,Ready
+light.hue_color_lamp_4_3,Slytherin Lamp,off,N/A,,2000,6535,Ready
+light.hue_play_gradient_lightstrip_1_2,Hue play gradient lightstrip 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_candle_2,Hue color candle 2,on,color_temp,2857,2000,6535,Ready
+light.hue_play_2_2,Hue play 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_play_2,Hue Play 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_4_2,Rose Lamp 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_play_wall_washer_2,Hue Play wall washer 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_3_2,Hue color lamp 3,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_2,Hue color lamp 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_infuse_ceiling_1,Ceiling,on,color_temp,3676,2000,6535,Ready
+light.bed_edison,Leah’s Sconce,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_bloom_2,Hue bloom 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_lamp_5,Rose Lamp 2,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_sana_wall_2,Hue Sana Bottom,off,N/A,,2000,6535,Ready
+light.hue_color_lamp_1_2,Hue color lamp 1,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.hue_color_candle_3,Hue color candle 3,on,color_temp,2857,2000,6535,Ready
+light.bedroom,Bedroom,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.office,Office,on,xy,,2000,6535,In color mode - needs switch to color_temp
+light.bookshelf,Bookshelf,unavailable,N/A,,2000,6535,Unavailable

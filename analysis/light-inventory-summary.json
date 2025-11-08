@@ -1,0 +1,44 @@
+{
+  "total_entities": 792,
+  "total_lights": 66,
+  "color_temp_capable": 36,
+  "brightness_only": 30,
+  
+  "color_temp_lights": [
+    {"entity": "light.bedroom_ceiling", "name": "Bedroom Ceiling", "range": "2000-6535K", "current": "350 mireds (2857K)"},
+    {"entity": "light.japanese_lamp", "name": "Japanese Lamp", "range": "2000-6535K", "mode": "xy"},
+    {"entity": "light.server_closet", "name": "Server Closet", "range": "2000-6535K", "mode": "xy"},
+    {"entity": "light.laundry_room_ceiling", "name": "Laundry Room Ceiling", "range": "2202-6535K", "current": "299 mireds (3344K)"},
+    {"entity": "light.hydra_lamp", "name": "Hydra Lamp", "range": "2000-6535K", "current": "230 mireds (4348K)"},
+    {"entity": "light.living_room_tv_lights", "name": "Living Room TV Lights", "range": "2000-6535K", "current": "284 mireds (3521K)"},
+    {"entity": "light.bedroom_tv_lights", "name": "Bedroom TV Lights", "range": "2000-6535K", "mode": "xy"},
+    {"entity": "light.rose_lamp", "name": "Rose Lamp", "range": "2000-6535K", "mode": "xy"},
+    {"entity": "light.hue_color_lamp_1_3", "name": "Pixar 2", "range": "2000-6535K", "current": "366 mireds (2732K)"},
+    {"entity": "light.rec_room", "name": "Rec Room", "range": "2202-6535K", "current": "230 mireds (4348K)"},
+    {"entity": "light.laundry_room", "name": "Laundry room", "range": "2202-6535K", "current": "299 mireds (3344K)"},
+    {"entity": "light.living_room", "name": "Living room", "range": "2000-6535K", "current": "284 mireds (3521K)"},
+    {"entity": "light.kitchen", "name": "Kitchen", "range": "2202-6535K", "current": "230 mireds (4348K)"},
+    {"entity": "light.office", "name": "Office", "range": "2000-6535K", "mode": "xy"},
+    {"entity": "light.bedroom", "name": "Bedroom", "range": "2000-6535K", "mode": "xy"}
+  ],
+  
+  "rooms_identified": [
+    "Bedroom",
+    "Living Room", 
+    "Kitchen",
+    "Office",
+    "Rec Room",
+    "Laundry Room",
+    "Guest Room",
+    "Ima's Room"
+  ],
+  
+  "key_findings": [
+    "All Hue lights support color temp (2000-6535K range)",
+    "Many lights currently in xy (color) mode instead of color_temp",
+    "Current temps range from 230-366 mireds (2732K-4348K)",
+    "Some lights unavailable (may be powered off or disconnected)",
+    "Filament bulbs are brightness-only (decorative, not adaptive)",
+    "Good mix of ceiling lights, lamps, and accent lighting"
+  ]
+}

@@ -1,41 +1,134 @@
-# Home Assistant Adaptive Lighting
+# Home Assistant Adaptive Lighting Configuration
 
-TypeScript-based adaptive lighting automation for Home Assistant using Digital Alchemy.
+**HomeKit-style circadian rhythm lighting for Matthew Gerstman's Home Assistant Green**
 
-## Features
+## What This Is
 
-- 🌅 HomeKit-style circadian rhythm color temperature
-- 🎨 Smooth transitions throughout the day
-- 🛡️ Manual override detection and respect
-- 🌙 Sleep mode support
-- 🏠 Per-room/per-light configuration
-- 📝 Type-safe entity management
+Complete Home Assistant configuration for adaptive lighting using the battle-tested [Adaptive Lighting HACS integration](https://github.com/basnijholt/adaptive-lighting). No external services required - runs natively inside Home Assistant.
 
-## Setup
+## Quick Start
 
-1. Clone this repository
-2. Install dependencies: `yarn install`
-3. Copy `.env.example` to `.env`
-4. Add your Home Assistant URL and Long-Lived Access Token
-5. Run `npx type-writer` to generate types from your HA setup
-6. Start dev server: `yarn dev`
+1. **Install Adaptive Lighting** via HACS
+2. **Copy** `config/packages/adaptive_lighting.yaml` to your `/config/packages/` directory
+3. **Restart** Home Assistant
+4. **Enable zones** via the switches created
+5. **Test** starting with Kitchen zone
+6. **Adjust** based on your preferences
 
-## Configuration
+Full instructions: [config/README.md](config/README.md)
 
-Edit `src/services/adaptive-lighting.ts` to customize:
-- Color temperature curves
-- Transition speeds
-- Sleep mode settings
-- Which lights to control
+## What's Included
 
-## Architecture
+### 📊 Analysis
+- **76 color-temp capable lights** identified
+- **6 zones configured** with different strategies
+- **Current state analysis** showing what needs to change
 
-Built with [Digital Alchemy](https://docs.digital-alchemy.app) framework:
-- Type-safe Home Assistant integration
-- Modular service architecture
-- Live reload during development
-- Testable automation logic
+### ⚙️ Configuration
+- **6 adaptive lighting zones:**
+  - Kitchen (task lighting)
+  - Laundry Room (utility)
+  - Rec Room (multi-use)
+  - Office (productivity)
+  - Living Room (flexible)
+  - Bedroom (sleep-optimized)
+- **46 lights** will be actively managed
+- **20 decorative lights** excluded (manual control)
+- **30 brightness-only lights** (not capable)
+
+### 📖 Documentation
+- Installation guide
+- Customization instructions  
+- Dry run report with scenarios
+- Implementation plan
+
+## Key Features
+
+✅ **HomeKit-style circadian rhythm** - 2700K sunrise → 4500K midday → 2700K sunset  
+✅ **Automatic manual override detection** - Pauses when you adjust lights  
+✅ **Sleep mode** - 2000K very warm light for bedtime  
+✅ **Per-room customization** - Different curves for different spaces  
+✅ **No external service** - Runs natively in Home Assistant  
+✅ **Version controlled** - All config in Git
+
+## Your Lighting Zones
+
+| Zone | Lights | Strategy | Color Temp Range |
+|------|--------|----------|------------------|
+| Kitchen | 1 | Always adaptive | 3000K - 5500K |
+| Laundry | 9 | Always adaptive | 2700K - 5500K |
+| Rec Room | 6 | Always adaptive | 2700K - 5000K |
+| Office | 4 | Always adaptive | 3500K - 5500K |
+| Living Room | 6 | Conditional (respects colors) | 2700K - 4500K |
+| Bedroom | 11 | Sleep-optimized | 2500K - 4000K |
+
+## Current Issues Addressed
+
+**Problem:** 24 lights currently in xy (color) mode won't respond to white temperature changes.
+
+**Solution:** Adaptive Lighting will switch them to color_temp mode, or you can exclude decorative lights that should stay in color mode.
+
+**Problem:** Manual color temperature adjustments throughout the day.
+
+**Solution:** Automatic circadian curve handles this. Lights adjust every 60-120 seconds with smooth 30-60 second transitions.
+
+## Files
+
+```
+ha-adaptive-lighting/
+├── config/
+│   ├── packages/
+│   │   └── adaptive_lighting.yaml    # Main configuration
+│   ├── README.md                      # Installation guide
+│   └── CUSTOMIZATION.md               # Adjustment guide
+├── analysis/
+│   ├── color-temp-capable-lights.csv  # 76 adaptive lights
+│   └── light-inventory-summary.json   # Complete analysis
+├── docs/
+│   ├── DRY_RUN_REPORT.md              # Detailed scenarios
+│   └── IMPLEMENTATION_PLAN.md         # Full strategy
+└── README.md                          # This file
+```
+
+## Next Steps
+
+1. **Read the dry run report** - [docs/DRY_RUN_REPORT.md](docs/DRY_RUN_REPORT.md)
+2. **Install Adaptive Lighting** via HACS
+3. **Copy configuration** to your Home Assistant
+4. **Test Kitchen zone** first
+5. **Report results** - Obvious will adjust based on feedback
+6. **Enable other zones** once satisfied
+
+## Working with Obvious
+
+This configuration is designed for iterative refinement:
+1. You test and report what feels wrong
+2. Obvious updates the YAML in this repo
+3. You pull changes and copy to HA
+4. Test again
+5. Repeat until perfect
+
+All changes are tracked in Git for easy rollback.
+
+## Why Not TypeScript Service?
+
+The original plan was a TypeScript service using Digital Alchemy. However, since you want **Home Assistant native configuration** without running external services, we're using the HACS Adaptive Lighting integration instead.
+
+**Advantages:**
+- No separate service to maintain
+- Runs inside Home Assistant
+- Battle-tested (2.3k GitHub stars)
+- Auto-updates via HACS
+- Lower resource usage
+
+**The TypeScript code is still here** if you ever want to extend beyond what the integration offers.
 
 ## License
 
 MIT
+
+---
+
+**Repository:** https://github.com/matthew-gerstman/ha-adaptive-lighting  
+**Generated by:** Obvious AI  
+**Last Updated:** November 8, 2025
