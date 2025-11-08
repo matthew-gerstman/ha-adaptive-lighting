@@ -10,6 +10,8 @@ import { createScenesCommand } from './commands/scenes.js';
 import { createWatchCommand } from './commands/watch.js';
 import { createScriptsCommand } from './commands/scripts.js';
 import { createQueryCommand } from './commands/query.js';
+import { createSwitchesCommand } from './commands/switches.js';
+import { createClimateCommand } from './commands/climate.js';
 
 const program = new Command();
 
@@ -22,6 +24,8 @@ program
 program.addCommand(createInfoCommand());
 program.addCommand(createEntitiesCommand());
 program.addCommand(createLightsCommand());
+program.addCommand(createSwitchesCommand());
+program.addCommand(createClimateCommand());
 program.addCommand(createConfigCommand());
 program.addCommand(createAutomationCommand());
 program.addCommand(createAdaptiveCommand());
