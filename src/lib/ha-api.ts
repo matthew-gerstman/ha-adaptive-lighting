@@ -1,5 +1,6 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosError } from 'axios';
 import type { HAConfig, HAEntity, HAArea, HAService, HAAutomation, ServiceCallData } from './types.js';
+import { validateEntityId, validateBrightness, validateKelvin, validateRGB, validateTransition } from './validators.js';
 
 export class HomeAssistantAPI {
   private client: AxiosInstance;
@@ -15,6 +16,21 @@ export class HomeAssistantAPI {
       },
       timeout: 10000,
     });
+
+    // Add response interceptor for better error messages
+    this.client.interceptors.response.use(
+      response => response,
+      (error: AxiosError) => {
+        if (error.response) {
+          const message = (error.response.data as any)?.message || error.message;
+          throw new Error(`HA API Error (${error.response.status}): ${message}`);
+        } else if (error.request) {
+          throw new Error(`Network Error: Unable to reach HomeAssistant at ${this.config.baseUrl}`);
+        } else {
+          throw new Error(`Request Error: ${error.message}`);
+        }
+      }
+    );
   }
 
   // Test connection
@@ -41,12 +57,19 @@ export class HomeAssistantAPI {
 
   // Get specific entity state
   async getState(entityId: string): Promise<HAEntity> {
+    validateEntityId(entityId);
     const response = await this.client.get(`/api/states/${entityId}`);
     return response.data;
   }
 
   // Get entity history
   async getHistory(entityId: string, hours: number = 24): Promise<any> {
+    validateEntityId(entityId);
+    
+    if (hours <= 0 || hours > 720) {
+      throw new Error('Hours must be between 1 and 720 (30 days)');
+    }
+
     const endTime = new Date();
     const startTime = new Date(endTime.getTime() - hours * 60 * 60 * 1000);
     const response = await this.client.get(
@@ -58,6 +81,10 @@ export class HomeAssistantAPI {
 
   // Call service
   async callService(domain: string, service: string, data: ServiceCallData = {}): Promise<any> {
+    if (!domain || !service) {
+      throw new Error('Domain and service are required');
+    }
+
     const response = await this.client.post(
       `/api/services/${domain}/${service}`,
       data
@@ -89,21 +116,27 @@ export class HomeAssistantAPI {
     rgb?: [number, number, number];
     transition?: number;
   } = {}): Promise<void> {
+    validateEntityId(entityId);
+    
     const data: ServiceCallData = { entity_id: entityId };
     
     if (options.brightness !== undefined) {
+      validateBrightness(options.brightness);
       data.brightness = options.brightness;
     }
     
     if (options.kelvin !== undefined) {
+      validateKelvin(options.kelvin);
       data.color_temp_kelvin = options.kelvin;
     }
     
     if (options.rgb !== undefined) {
+      validateRGB(options.rgb);
       data.rgb_color = options.rgb;
     }
     
     if (options.transition !== undefined) {
+      validateTransition(options.transition);
       data.transition = options.transition;
     }
 
@@ -111,8 +144,11 @@ export class HomeAssistantAPI {
   }
 
   async turnOffLight(entityId: string, transition?: number): Promise<void> {
+    validateEntityId(entityId);
+    
     const data: ServiceCallData = { entity_id: entityId };
     if (transition !== undefined) {
+      validateTransition(transition);
       data.transition = transition;
     }
     await this.callService('light', 'turn_off', data);
@@ -125,6 +161,7 @@ export class HomeAssistantAPI {
   }
 
   async triggerAutomation(automationId: string, data: any = {}): Promise<void> {
+    validateEntityId(automationId);
     await this.callService('automation', 'trigger', {
       entity_id: automationId,
       ...data
@@ -132,10 +169,12 @@ export class HomeAssistantAPI {
   }
 
   async enableAutomation(automationId: string): Promise<void> {
+    validateEntityId(automationId);
     await this.callService('automation', 'turn_on', { entity_id: automationId });
   }
 
   async disableAutomation(automationId: string): Promise<void> {
+    validateEntityId(automationId);
     await this.callService('automation', 'turn_off', { entity_id: automationId });
   }
 

@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { getHAClient } from '../utils/ha-client.js';
 import * as output from '../utils/output.js';
+import { parseRGB } from '../../lib/validators.js';
 import type { HAEntity } from '../../lib/types.js';
 
 export function createLightsCommand(): Command {
@@ -21,10 +22,8 @@ export function createLightsCommand(): Command {
         let states = await client.getStates();
         spin.stop();
 
-        // Filter to lights only
         let lightStates = states.filter(e => e.entity_id.startsWith('light.'));
 
-        // Apply filters
         if (options.area) {
           lightStates = lightStates.filter(e => 
             e.attributes.area_id === options.area ||
@@ -141,8 +140,7 @@ export function createLightsCommand(): Command {
         }
         
         if (options.rgb) {
-          const [r, g, b] = options.rgb.split(',').map((v: string) => parseInt(v.trim()));
-          lightOptions.rgb = [r, g, b] as [number, number, number];
+          lightOptions.rgb = parseRGB(options.rgb);
         }
         
         if (options.transition) {
@@ -199,8 +197,7 @@ export function createLightsCommand(): Command {
         }
         
         if (options.rgb) {
-          const [r, g, b] = options.rgb.split(',').map((v: string) => parseInt(v.trim()));
-          lightOptions.rgb = [r, g, b] as [number, number, number];
+          lightOptions.rgb = parseRGB(options.rgb);
         }
         
         if (options.transition) {
@@ -229,15 +226,18 @@ export function createLightsCommand(): Command {
     .option('--dry-run', 'Show what would happen without executing')
     .action(async (command, options) => {
       try {
+        if (command !== 'on' && command !== 'off') {
+          output.error('Command must be "on" or "off"');
+          process.exit(1);
+        }
+
         const spin = output.spinner('Fetching lights...');
         const client = getHAClient();
         let states = await client.getStates();
         spin.stop();
 
-        // Filter to lights
         let lightStates = states.filter(e => e.entity_id.startsWith('light.'));
 
-        // Apply filters
         if (options.area) {
           lightStates = lightStates.filter(e => 
             e.attributes.area_id === options.area ||
@@ -247,7 +247,6 @@ export function createLightsCommand(): Command {
 
         if (options.filter) {
           const filter = JSON.parse(options.filter);
-          // Apply custom filter logic here
         }
 
         if (lightStates.length === 0) {
@@ -271,7 +270,6 @@ export function createLightsCommand(): Command {
           return;
         }
 
-        // Execute batch operation
         const batchSpin = output.spinner(`Executing ${command} on ${lightStates.length} lights...`);
         
         for (const light of lightStates) {
